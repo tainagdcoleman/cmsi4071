@@ -1,0 +1,24 @@
+# Disable caching for HTML pages
+/*.html
+  Cache-Control: no-cache, no-store, must-revalidate
+
+# Disable caching for main CSS and JS (no hash in filenames)
+/index.css
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/prescript.js
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/postscript.js
+  Cache-Control: no-cache, no-store, must-revalidate
+
+# Disable caching for search index
+/static/contentIndex.json
+  Cache-Control: no-cache, no-store, must-revalidate
+
+# Allow caching for truly static assets (images, fonts)
+/static/*
+  Cache-Control: public, max-age=86400
+
+/images/*
+  Cache-Control: public, max-age=86400

@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Count to Infinity Animation</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #e8e8e8;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #ff4757, #ffd93d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .tab:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, #ff4757, #ff6b6b);
+            border-color: transparent;
+        }
+
+        .tab.active.fix {
+            background: linear-gradient(135deg, #00d9ff, #00ff88);
+            color: #1a1a2e;
+        }
+
+        .network-container {
+            background: rgba(255,255,255,0.03);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .network {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0;
+            margin-bottom: 40px;
+            position: relative;
+            height: 120px;
+        }
+
+        .node {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s ease;
+        }
+
+        .node .cost {
+            font-size: 0.8rem;
+            font-family: 'JetBrains Mono', monospace;
+            margin-top: 4px;
+            padding: 2px 8px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+        }
+
+        .node.destination {
+            background: linear-gradient(135deg, #00ff88, #00d9ff);
+            color: #1a1a2e;
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.4);
+        }
+
+        .node.router {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .node.danger {
+            background: linear-gradient(135deg, #ff4757, #ff6b6b) !important;
+            animation: dangerPulse 0.5s ease infinite;
+        }
+
+        .node.safe {
+            background: linear-gradient(135deg, #00ff88, #00d9ff) !important;
+            color: #1a1a2e;
+        }
+
+        @keyframes dangerPulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 71, 87, 0.4); }
+            50% { box-shadow: 0 0 40px rgba(255, 71, 87, 0.8); }
+        }
+
+        .link {
+            width: 100px;
+            height: 6px;
+            background: linear-gradient(90deg, #444, #666);
+            position: relative;
+            z-index: 1;
+        }
+
+        .link.failed {
+            background: linear-gradient(90deg, #ff4757, #ff6b6b);
+        }
+
+        .link.failed::after {
+            content: '✕';
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #ff4757;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .message {
+            position: absolute;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+            white-space: nowrap;
+            z-index: 10;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .message.show {
+            opacity: 1;
+        }
+
+        .message.normal {
+            background: linear-gradient(135deg, #ffd93d, #ff9f43);
+            color: #1a1a2e;
+        }
+
+        .message.poison {
+            background: linear-gradient(135deg, #ff4757, #ff6b6b);
+            color: white;
+        }
+
+        .cost-display {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .cost-card {
+            background: rgba(0,0,0,0.3);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .cost-card h3 {
+            color: #00d9ff;
+            margin-bottom: 10px;
+        }
+
+        .cost-card .cost-value {
+            font-size: 3rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            transition: all 0.3s ease;
+        }
+
+        .cost-card .cost-value.infinity {
+            color: #ff4757;
+        }
+
+        .cost-card .cost-value.danger {
+            color: #ffd93d;
+            animation: countPulse 0.3s ease;
+        }
+
+        @keyframes countPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        .cost-card .via {
+            color: #888;
+            font-size: 0.9rem;
+            margin-top: 8px;
+        }
+
+        .status {
+            text-align: center;
+            padding: 20px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .status .round {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ffd93d;
+            margin-bottom: 8px;
+        }
+
+        .status .description {
+            color: #aaa;
+            font-size: 1rem;
+            line-height: 1.6;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            font-family: 'Space Grotesk', sans-serif;
+            padding: 12px 28px;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button.primary {
+            background: linear-gradient(135deg, #ffd93d, #ff9f43);
+            color: #1a1a2e;
+        }
+
+        button.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 217, 61, 0.3);
+        }
+
+        button.secondary {
+            background: rgba(255,255,255,0.1);
+            color: #e8e8e8;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        button.secondary:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .speed-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .speed-control label {
+            color: #888;
+        }
+
+        .speed-control input[type="range"] {
+            width: 150px;
+            accent-color: #ffd93d;
+        }
+
+        .explanation-box {
+            background: rgba(255, 217, 61, 0.1);
+            border: 1px solid rgba(255, 217, 61, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .explanation-box.success {
+            background: rgba(0, 255, 136, 0.1);
+            border-color: rgba(0, 255, 136, 0.3);
+        }
+
+        .explanation-box h4 {
+            color: #ffd93d;
+            margin-bottom: 10px;
+        }
+
+        .explanation-box.success h4 {
+            color: #00ff88;
+        }
+
+        .explanation-box p {
+            color: #ccc;
+            line-height: 1.6;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Activity 2: Count to Infinity</h1>
+        <p class="subtitle">Watch the disaster unfold... then see how we fix it!</p>
+
+        <div class="tabs">
+            <div class="tab active" onclick="switchMode('disaster')">💥 The Disaster (No Fixes)</div>
+            <div class="tab fix" onclick="switchMode('poison')">💊 With Poison Reverse</div>
+        </div>
+
+        <div class="network-container">
+            <div class="network" id="network">
+                <div class="node destination" id="nodeA">
+                    <span>A</span>
+                    <span class="cost">dest</span>
+                </div>
+                <div class="link failed" id="link-A-R1"></div>
+                <div class="node router" id="nodeR1">
+                    <span>R1</span>
+                    <span class="cost" id="R1-mini">?</span>
+                </div>
+                <div class="link" id="link-R1-R2"></div>
+                <div class="node router" id="nodeR2">
+                    <span>R2</span>
+                    <span class="cost" id="R2-mini">2</span>
+                </div>
+                <div class="link" id="link-R2-R3"></div>
+                <div class="node router" id="nodeR3">
+                    <span>R3</span>
+                    <span class="cost" id="R3-mini">3</span>
+                </div>
+                
+                <!-- Message bubbles -->
+                <div class="message normal" id="msg-R2-R1" style="top: -40px; left: 350px;">A: cost 2</div>
+                <div class="message normal" id="msg-R1-R2" style="top: -40px; left: 350px;">A: cost 3</div>
+                <div class="message poison" id="msg-poison" style="top: -40px; left: 350px;">A: cost ∞</div>
+            </div>
+
+            <div class="cost-display">
+                <div class="cost-card">
+                    <h3>R1's Cost to A</h3>
+                    <div class="cost-value" id="R1-cost">?</div>
+                    <div class="via" id="R1-via">link down!</div>
+                </div>
+                <div class="cost-card">
+                    <h3>R2's Cost to A</h3>
+                    <div class="cost-value" id="R2-cost">2</div>
+                    <div class="via" id="R2-via">via R1</div>
+                </div>
+                <div class="cost-card">
+                    <h3>R3's Cost to A</h3>
+                    <div class="cost-value" id="R3-cost">3</div>
+                    <div class="via" id="R3-via">via R2</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="status">
+            <div class="round" id="roundDisplay">Link A—R1 has FAILED!</div>
+            <div class="description" id="descriptionDisplay">Initial state after failure. R1 lost its direct route. R2 and R3 don't know yet...</div>
+        </div>
+
+        <div class="controls">
+            <button class="primary" id="nextBtn" onclick="nextStep()">Next Step →</button>
+            <button class="secondary" id="autoBtn" onclick="autoPlay()">Auto Play ▶</button>
+            <button class="secondary" onclick="reset()">Reset ↺</button>
+        </div>
+
+        <div class="speed-control">
+            <label>Speed:</label>
+            <input type="range" id="speedSlider" min="500" max="2000" value="1000" step="100">
+            <span id="speedValue">1.0s</span>
+        </div>
+
+        <div class="explanation-box" id="explanation">
+            <h4>🤔 Why does this happen?</h4>
+            <p>R1's link to A failed. R2 advertises "A is 2 away" to R1. R1 thinks "Great! I can reach A through R2 with cost 3!" But R2's path goes <strong>through R1</strong>. R2 doesn't share the full path — only (destination, cost). So R1 doesn't realize R2's path is useless.</p>
+        </div>
+
+        <div class="explanation-box success hidden" id="explanation-success">
+            <h4>✅ Poison Reverse Saves the Day!</h4>
+            <p>With poison reverse, R2 tells R1: "A is <strong>infinity</strong> from me" (because R2 learned about A <em>via</em> R1). When the link fails, R1 gets no false hope. R1 correctly knows A is unreachable. The network stabilizes immediately!</p>
+        </div>
+    </div>
+
+    <script>
+        let mode = 'disaster';
+        let step = 0;
+        let autoPlaying = false;
+        let autoInterval;
+
+        const disasterSteps = [
+            {
+                round: "Step 1",
+                description: "R2 advertises to R1: \"A is 2 away from me.\" R1 thinks: 2 + 1 = 3. R1 accepts!",
+                action: () => {
+                    showMessage('msg-R2-R1', 'A: cost 2');
+                    setTimeout(() => {
+                        updateCost('R1', 3, 'via R2');
+                        hideMessage('msg-R2-R1');
+                    }, 500);
+                }
+            },
+            {
+                round: "Step 2",
+                description: "R1 tells R2: \"A is 3 away.\" R2's next-hop (R1) says 3, so R2 must accept: 3 + 1 = 4",
+                action: () => {
+                    showMessage('msg-R1-R2', 'A: cost 3');
+                    setTimeout(() => {
+                        updateCost('R2', 4, 'via R1');
+                        hideMessage('msg-R1-R2');
+                    }, 500);
+                }
+            },
+            {
+                round: "Step 3",
+                description: "R2 tells R1: \"A is 4 away.\" R1's next-hop says 4, accept: 4 + 1 = 5. Also R3 updates to 5.",
+                action: () => {
+                    updateCost('R1', 5, 'via R2');
+                    updateCost('R3', 5, 'via R2');
+                }
+            },
+            {
+                round: "Step 4",
+                description: "The cycle continues... R2 updates to 6, R1 and R3 will follow...",
+                action: () => {
+                    updateCost('R2', 6, 'via R1');
+                }
+            },
+            {
+                round: "Step 5",
+                description: "R1 → 7, R3 → 7... The costs keep climbing!",
+                action: () => {
+                    updateCost('R1', 7, 'via R2');
+                    updateCost('R3', 7, 'via R2');
+                }
+            },
+            {
+                round: "Step 6",
+                description: "R2 → 8... We're halfway to infinity (16)!",
+                action: () => {
+                    updateCost('R2', 8, 'via R1');
+                }
+            },
+            {
+                round: "Step 7",
+                description: "R1 → 9, R3 → 9...",
+                action: () => {
+                    updateCost('R1', 9, 'via R2');
+                    updateCost('R3', 9, 'via R2');
+                }
+            },
+            {
+                round: "Step 8",
+                description: "R2 → 10...",
+                action: () => {
+                    updateCost('R2', 10, 'via R1');
+                }
+            },
+            {
+                round: "Step 9",
+                description: "R1 → 11, R3 → 11... Almost there!",
+                action: () => {
+                    updateCost('R1', 11, 'via R2');
+                    updateCost('R3', 11, 'via R2');
+                }
+            },
+            {
+                round: "Step 10",
+                description: "R2 → 12...",
+                action: () => {
+                    updateCost('R2', 12, 'via R1');
+                }
+            },
+            {
+                round: "Step 11",
+                description: "R1 → 13, R3 → 13...",
+                action: () => {
+                    updateCost('R1', 13, 'via R2');
+                    updateCost('R3', 13, 'via R2');
+                }
+            },
+            {
+                round: "Step 12",
+                description: "R2 → 14...",
+                action: () => {
+                    updateCost('R2', 14, 'via R1');
+                }
+            },
+            {
+                round: "Step 13",
+                description: "R1 → 15, R3 → 15... One more step!",
+                action: () => {
+                    updateCost('R1', 15, 'via R2');
+                    updateCost('R3', 15, 'via R2');
+                }
+            },
+            {
+                round: "Step 14 — INFINITY!",
+                description: "R2 → 16 = ∞! Finally! Cost ≥ 16 means unreachable. The network stabilizes.",
+                action: () => {
+                    updateCost('R2', '∞', 'unreachable', true);
+                    setTimeout(() => {
+                        updateCost('R1', '∞', 'unreachable', true);
+                        updateCost('R3', '∞', 'unreachable', true);
+                    }, 500);
+                    document.getElementById('nodeR1').classList.add('danger');
+                    document.getElementById('nodeR2').classList.add('danger');
+                    document.getElementById('nodeR3').classList.add('danger');
+                }
+            },
+            {
+                round: "😱 14 Steps to Converge!",
+                description: "It took 14 steps just to figure out A is unreachable! During this time, packets would loop endlessly between R1 and R2. This is why we need fixes!",
+                action: () => {}
+            }
+        ];
+
+        const poisonSteps = [
+            {
+                round: "With Poison Reverse",
+                description: "Before the failure, R2 was telling R1: \"A is ∞ from me\" (because R2 learned about A via R1). This is poison reverse!",
+                action: () => {
+                    showMessage('msg-poison', 'A: cost ∞');
+                }
+            },
+            {
+                round: "Step 1",
+                description: "Link fails. R1 hears from R2: \"A is ∞.\" R1 has no other options. R1 knows A is unreachable!",
+                action: () => {
+                    hideMessage('msg-poison');
+                    updateCost('R1', '∞', 'unreachable', true);
+                    document.getElementById('nodeR1').classList.add('safe');
+                }
+            },
+            {
+                round: "Step 2",
+                description: "R1 tells R2: \"A is ∞.\" R2 accepts (from next-hop). R2 knows A is unreachable.",
+                action: () => {
+                    updateCost('R2', '∞', 'unreachable', true);
+                    document.getElementById('nodeR2').classList.add('safe');
+                }
+            },
+            {
+                round: "Step 3",
+                description: "R2 tells R3: \"A is ∞.\" R3 accepts. Everyone knows A is unreachable!",
+                action: () => {
+                    updateCost('R3', '∞', 'unreachable', true);
+                    document.getElementById('nodeR3').classList.add('safe');
+                }
+            },
+            {
+                round: "✅ Done in 3 Steps!",
+                description: "With poison reverse, we converged in just 3 steps instead of 14! No routing loops, no wasted packets. The network correctly knows A is unreachable.",
+                action: () => {
+                    document.getElementById('explanation').classList.add('hidden');
+                    document.getElementById('explanation-success').classList.remove('hidden');
+                }
+            }
+        ];
+
+        function switchMode(newMode) {
+            mode = newMode;
+            reset();
+            
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelector(`.tab${newMode === 'poison' ? '.fix' : ':not(.fix)'}`).classList.add('active');
+            
+            if (newMode === 'poison') {
+                document.getElementById('explanation').classList.add('hidden');
+            } else {
+                document.getElementById('explanation').classList.remove('hidden');
+                document.getElementById('explanation-success').classList.add('hidden');
+            }
+        }
+
+        function showMessage(id, text) {
+            const msg = document.getElementById(id);
+            msg.textContent = text;
+            msg.classList.add('show');
+        }
+
+        function hideMessage(id) {
+            document.getElementById(id).classList.remove('show');
+        }
+
+        function updateCost(router, cost, via, isInfinity = false) {
+            const costEl = document.getElementById(`${router}-cost`);
+            const viaEl = document.getElementById(`${router}-via`);
+            const miniEl = document.getElementById(`${router}-mini`);
+            
+            costEl.textContent = cost;
+            costEl.classList.remove('infinity', 'danger');
+            
+            if (isInfinity) {
+                costEl.classList.add('infinity');
+            } else if (cost > 10) {
+                costEl.classList.add('danger');
+            }
+            
+            viaEl.textContent = via;
+            miniEl.textContent = cost;
+        }
+
+        function nextStep() {
+            const currentSteps = mode === 'disaster' ? disasterSteps : poisonSteps;
+            if (step < currentSteps.length) {
+                const s = currentSteps[step];
+                document.getElementById('roundDisplay').textContent = s.round;
+                document.getElementById('descriptionDisplay').textContent = s.description;
+                s.action();
+                step++;
+                
+                if (step >= currentSteps.length) {
+                    document.getElementById('nextBtn').disabled = true;
+                }
+            }
+        }
+
+        function autoPlay() {
+            if (autoPlaying) {
+                clearInterval(autoInterval);
+                autoPlaying = false;
+                document.getElementById('autoBtn').textContent = 'Auto Play ▶';
+            } else {
+                autoPlaying = true;
+                document.getElementById('autoBtn').textContent = 'Pause ⏸';
+                const speed = parseInt(document.getElementById('speedSlider').value);
+                autoInterval = setInterval(() => {
+                    const currentSteps = mode === 'disaster' ? disasterSteps : poisonSteps;
+                    if (step < currentSteps.length) {
+                        nextStep();
+                    } else {
+                        clearInterval(autoInterval);
+                        autoPlaying = false;
+                        document.getElementById('autoBtn').textContent = 'Auto Play ▶';
+                    }
+                }, speed);
+            }
+        }
+
+        function reset() {
+            clearInterval(autoInterval);
+            autoPlaying = false;
+            step = 0;
+            
+            document.getElementById('autoBtn').textContent = 'Auto Play ▶';
+            document.getElementById('nextBtn').disabled = false;
+            document.getElementById('roundDisplay').textContent = 'Link A—R1 has FAILED!';
+            document.getElementById('descriptionDisplay').textContent = 'Initial state after failure. R1 lost its direct route. R2 and R3 don\'t know yet...';
+            
+            updateCost('R1', '?', 'link down!');
+            updateCost('R2', 2, 'via R1');
+            updateCost('R3', 3, 'via R2');
+            
+            document.querySelectorAll('.message').forEach(m => m.classList.remove('show'));
+            document.querySelectorAll('.node.router').forEach(n => {
+                n.classList.remove('danger', 'safe');
+            });
+            
+            if (mode === 'disaster') {
+                document.getElementById('explanation').classList.remove('hidden');
+                document.getElementById('explanation-success').classList.add('hidden');
+            }
+        }
+
+        // Speed slider
+        document.getElementById('speedSlider').addEventListener('input', function() {
+            document.getElementById('speedValue').textContent = (this.value / 1000).toFixed(1) + 's';
+            if (autoPlaying) {
+                clearInterval(autoInterval);
+                autoInterval = setInterval(() => {
+                    const currentSteps = mode === 'disaster' ? disasterSteps : poisonSteps;
+                    if (step < currentSteps.length) {
+                        nextStep();
+                    } else {
+                        clearInterval(autoInterval);
+                        autoPlaying = false;
+                        document.getElementById('autoBtn').textContent = 'Auto Play ▶';
+                    }
+                }, this.value);
+            }
+        });
+    </script>
+</body>
+</html>

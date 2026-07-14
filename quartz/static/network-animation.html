@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NETS | Network Fundamentals</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #0a0a0f;
+            --node-cyan: #00f5ff;
+            --node-magenta: #ff00aa;
+            --node-yellow: #f0ff00;
+            --link-color: rgba(0, 245, 255, 0.3);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.6);
+            --glow-cyan: 0 0 30px rgba(0, 245, 255, 0.5);
+            --glow-magenta: 0 0 30px rgba(255, 0, 170, 0.5);
+        }
+
+        body {
+            font-family: 'Space Mono', monospace;
+            background: var(--bg-dark);
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: var(--text-primary);
+        }
+
+        .hero {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* Animated grid background */
+        .grid-bg {
+            position: absolute;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(0, 245, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 245, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridPulse 4s ease-in-out infinite;
+        }
+
+        @keyframes gridPulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        /* Network canvas */
+        #networkCanvas {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+        }
+
+        /* Content overlay */
+        .content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .title-container {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .glitch-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .title {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(4rem, 15vw, 12rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, var(--node-cyan) 0%, var(--node-magenta) 50%, var(--node-yellow) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: titleGlow 3s ease-in-out infinite;
+            position: relative;
+        }
+
+        .title::before,
+        .title::after {
+            content: 'NETS';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--node-cyan) 0%, var(--node-magenta) 50%, var(--node-yellow) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .title::before {
+            animation: glitch1 2.5s infinite;
+            clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+        }
+
+        .title::after {
+            animation: glitch2 2.5s infinite;
+            clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
+        }
+
+        @keyframes glitch1 {
+            0%, 90%, 100% { transform: translate(0); }
+            92% { transform: translate(-5px, 2px); }
+            94% { transform: translate(5px, -2px); }
+            96% { transform: translate(-3px, 1px); }
+        }
+
+        @keyframes glitch2 {
+            0%, 90%, 100% { transform: translate(0); }
+            91% { transform: translate(5px, -2px); }
+            93% { transform: translate(-5px, 2px); }
+            95% { transform: translate(3px, -1px); }
+        }
+
+        @keyframes titleGlow {
+            0%, 100% { filter: drop-shadow(0 0 20px rgba(0, 245, 255, 0.3)); }
+            50% { filter: drop-shadow(0 0 40px rgba(255, 0, 170, 0.4)); }
+        }
+
+        .subtitle {
+            font-family: 'Space Mono', monospace;
+            font-size: clamp(0.8rem, 2vw, 1.2rem);
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5em;
+            margin-bottom: 3rem;
+            animation: fadeInUp 1s ease-out 0.5s both;
+        }
+
+        .typing-text {
+            display: inline-block;
+            overflow: hidden;
+            border-right: 2px solid var(--node-cyan);
+            white-space: nowrap;
+            animation: 
+                typing 3s steps(30) 1s both,
+                blink 0.7s step-end infinite;
+        }
+
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        @keyframes blink {
+            50% { border-color: transparent; }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Protocol badges */
+        .protocols {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            animation: fadeInUp 1s ease-out 1s both;
+        }
+
+        .protocol-badge {
+            padding: 0.75rem 1.5rem;
+            border: 1px solid var(--node-cyan);
+            background: rgba(0, 245, 255, 0.05);
+            font-size: 0.85rem;
+            letter-spacing: 0.1em;
+            position: relative;
+            overflow: hidden;
+            cursor: default;
+            transition: all 0.3s ease;
+        }
+
+        .protocol-badge::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 245, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .protocol-badge:hover::before {
+            left: 100%;
+        }
+
+        .protocol-badge:hover {
+            background: rgba(0, 245, 255, 0.1);
+            box-shadow: var(--glow-cyan);
+            transform: translateY(-2px);
+        }
+
+        .protocol-badge.magenta {
+            border-color: var(--node-magenta);
+            background: rgba(255, 0, 170, 0.05);
+        }
+
+        .protocol-badge.magenta:hover {
+            background: rgba(255, 0, 170, 0.1);
+            box-shadow: var(--glow-magenta);
+        }
+
+        .protocol-badge.magenta::before {
+            background: linear-gradient(90deg, transparent, rgba(255, 0, 170, 0.2), transparent);
+        }
+
+        /* Floating stats */
+        .stats {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 3rem;
+            z-index: 10;
+            animation: fadeInUp 1s ease-out 1.5s both;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-family: 'Syne', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--node-cyan);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--text-secondary);
+        }
+
+        /* Scan line effect */
+        .scanline {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--node-cyan), transparent);
+            opacity: 0.3;
+            animation: scan 4s linear infinite;
+            z-index: 5;
+        }
+
+        @keyframes scan {
+            0% { top: 0; }
+            100% { top: 100%; }
+        }
+
+        /* Corner decorations */
+        .corner {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            z-index: 10;
+        }
+
+        .corner::before,
+        .corner::after {
+            content: '';
+            position: absolute;
+            background: var(--node-cyan);
+        }
+
+        .corner.top-left {
+            top: 2rem;
+            left: 2rem;
+        }
+        .corner.top-left::before {
+            top: 0;
+            left: 0;
+            width: 60px;
+            height: 2px;
+        }
+        .corner.top-left::after {
+            top: 0;
+            left: 0;
+            width: 2px;
+            height: 60px;
+        }
+
+        .corner.top-right {
+            top: 2rem;
+            right: 2rem;
+        }
+        .corner.top-right::before {
+            top: 0;
+            right: 0;
+            width: 60px;
+            height: 2px;
+        }
+        .corner.top-right::after {
+            top: 0;
+            right: 0;
+            width: 2px;
+            height: 60px;
+        }
+
+        .corner.bottom-left {
+            bottom: 2rem;
+            left: 2rem;
+        }
+        .corner.bottom-left::before {
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 2px;
+        }
+        .corner.bottom-left::after {
+            bottom: 0;
+            left: 0;
+            width: 2px;
+            height: 60px;
+        }
+
+        .corner.bottom-right {
+            bottom: 2rem;
+            right: 2rem;
+        }
+        .corner.bottom-right::before {
+            bottom: 0;
+            right: 0;
+            width: 60px;
+            height: 2px;
+        }
+        .corner.bottom-right::after {
+            bottom: 0;
+            right: 0;
+            width: 2px;
+            height: 60px;
+        }
+
+        /* Packet info tooltip */
+        .packet-info {
+            position: fixed;
+            padding: 0.5rem 1rem;
+            background: rgba(10, 10, 15, 0.9);
+            border: 1px solid var(--node-cyan);
+            font-size: 0.75rem;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+            z-index: 100;
+        }
+
+        .packet-info.visible {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <div class="grid-bg"></div>
+        <canvas id="networkCanvas"></canvas>
+        <div class="scanline"></div>
+        
+        <div class="corner top-left"></div>
+        <div class="corner top-right"></div>
+        <div class="corner bottom-left"></div>
+        <div class="corner bottom-right"></div>
+
+        <div class="content">
+            <div class="title-container">
+                <div class="glitch-wrapper">
+                    <h1 class="title">NETS</h1>
+                </div>
+            </div>
+            <p class="subtitle">
+                <span class="typing-text">Network Fundamentals</span>
+            </p>
+            <div class="protocols">
+                <span class="protocol-badge">RIP</span>
+                <span class="protocol-badge magenta">OSPF</span>
+                <span class="protocol-badge">BGP</span>
+                <span class="protocol-badge magenta">TCP/IP</span>
+                <span class="protocol-badge">UDP</span>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat">
+                <span class="stat-value" id="nodeCount">0</span>
+                <span class="stat-label">Active Nodes</span>
+            </div>
+            <div class="stat">
+                <span class="stat-value" id="packetCount">0</span>
+                <span class="stat-label">Packets/sec</span>
+            </div>
+            <div class="stat">
+                <span class="stat-value" id="latency">0</span>
+                <span class="stat-label">Avg Latency (ms)</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="packet-info" id="packetInfo">
+        <div>SRC: <span id="srcAddr">192.168.1.1</span></div>
+        <div>DST: <span id="dstAddr">10.0.0.1</span></div>
+        <div>TTL: <span id="ttl">64</span></div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('networkCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        let width, height;
+        const nodes = [];
+        const packets = [];
+        const connections = [];
+        
+        const colors = {
+            cyan: '#00f5ff',
+            magenta: '#ff00aa',
+            yellow: '#f0ff00',
+            link: 'rgba(0, 245, 255, 0.15)'
+        };
+
+        // IP address generator
+        function generateIP() {
+            const subnets = ['192.168', '10.0', '172.16', '8.8'];
+            const subnet = subnets[Math.floor(Math.random() * subnets.length)];
+            return `${subnet}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`;
+        }
+
+        class Node {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.targetX = x;
+                this.targetY = y;
+                this.radius = Math.random() * 4 + 3;
+                this.color = Math.random() > 0.7 ? colors.magenta : colors.cyan;
+                this.pulsePhase = Math.random() * Math.PI * 2;
+                this.connections = [];
+                this.ip = generateIP();
+                this.activity = 0;
+            }
+
+            update() {
+                // Gentle floating motion
+                this.targetX += (Math.random() - 0.5) * 0.5;
+                this.targetY += (Math.random() - 0.5) * 0.5;
+                
+                // Keep in bounds
+                this.targetX = Math.max(50, Math.min(width - 50, this.targetX));
+                this.targetY = Math.max(50, Math.min(height - 50, this.targetY));
+                
+                this.x += (this.targetX - this.x) * 0.02;
+                this.y += (this.targetY - this.y) * 0.02;
+                
+                this.pulsePhase += 0.03;
+                this.activity *= 0.95;
+            }
+
+            draw() {
+                const pulse = Math.sin(this.pulsePhase) * 0.3 + 1;
+                const activeGlow = this.activity * 20;
+                
+                // Outer glow
+                const gradient = ctx.createRadialGradient(
+                    this.x, this.y, 0,
+                    this.x, this.y, this.radius * 3 * pulse + activeGlow
+                );
+                gradient.addColorStop(0, this.color);
+                gradient.addColorStop(0.5, this.color + '40');
+                gradient.addColorStop(1, 'transparent');
+                
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius * 3 * pulse + activeGlow, 0, Math.PI * 2);
+                ctx.fillStyle = gradient;
+                ctx.fill();
+                
+                // Core
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius * pulse, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+        }
+
+        class Packet {
+            constructor(from, to) {
+                this.from = from;
+                this.to = to;
+                this.progress = 0;
+                this.speed = 0.008 + Math.random() * 0.012;
+                this.color = Math.random() > 0.5 ? colors.cyan : colors.magenta;
+                this.size = 3;
+                this.trail = [];
+                this.ttl = Math.floor(Math.random() * 64) + 32;
+            }
+
+            update() {
+                this.progress += this.speed;
+                
+                const x = this.from.x + (this.to.x - this.from.x) * this.progress;
+                const y = this.from.y + (this.to.y - this.from.y) * this.progress;
+                
+                this.trail.unshift({ x, y, alpha: 1 });
+                if (this.trail.length > 15) this.trail.pop();
+                
+                this.trail.forEach((point, i) => {
+                    point.alpha *= 0.85;
+                });
+                
+                return this.progress < 1;
+            }
+
+            draw() {
+                // Draw trail
+                this.trail.forEach((point, i) => {
+                    ctx.beginPath();
+                    ctx.arc(point.x, point.y, this.size * (1 - i / this.trail.length), 0, Math.PI * 2);
+                    ctx.fillStyle = this.color + Math.floor(point.alpha * 255).toString(16).padStart(2, '0');
+                    ctx.fill();
+                });
+                
+                // Draw packet head
+                const x = this.from.x + (this.to.x - this.from.x) * this.progress;
+                const y = this.from.y + (this.to.y - this.from.y) * this.progress;
+                
+                ctx.beginPath();
+                ctx.arc(x, y, this.size + 1, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.shadowColor = this.color;
+                ctx.shadowBlur = 10;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+            }
+
+            getCurrentPosition() {
+                return {
+                    x: this.from.x + (this.to.x - this.from.x) * this.progress,
+                    y: this.from.y + (this.to.y - this.from.y) * this.progress
+                };
+            }
+        }
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+
+        function init() {
+            resize();
+            
+            // Create nodes in a more interesting pattern
+            const nodeCount = Math.floor((width * height) / 25000);
+            
+            for (let i = 0; i < nodeCount; i++) {
+                const angle = (i / nodeCount) * Math.PI * 2;
+                const radius = Math.random() * Math.min(width, height) * 0.35 + 100;
+                const x = width / 2 + Math.cos(angle) * radius + (Math.random() - 0.5) * 150;
+                const y = height / 2 + Math.sin(angle) * radius + (Math.random() - 0.5) * 150;
+                nodes.push(new Node(x, y));
+            }
+            
+            // Create connections based on proximity
+            nodes.forEach((node, i) => {
+                nodes.forEach((other, j) => {
+                    if (i < j) {
+                        const dist = Math.hypot(node.x - other.x, node.y - other.y);
+                        if (dist < 200) {
+                            connections.push({ from: node, to: other, dist });
+                            node.connections.push(other);
+                            other.connections.push(node);
+                        }
+                    }
+                });
+            });
+            
+            // Update stats
+            document.getElementById('nodeCount').textContent = nodes.length;
+        }
+
+        function spawnPacket() {
+            if (connections.length === 0) return;
+            
+            const conn = connections[Math.floor(Math.random() * connections.length)];
+            const direction = Math.random() > 0.5;
+            const from = direction ? conn.from : conn.to;
+            const to = direction ? conn.to : conn.from;
+            
+            packets.push(new Packet(from, to));
+            from.activity = 1;
+        }
+
+        let packetCounter = 0;
+        let lastPacketTime = 0;
+
+        function animate(timestamp) {
+            ctx.clearRect(0, 0, width, height);
+            
+            // Draw connections
+            connections.forEach(conn => {
+                const gradient = ctx.createLinearGradient(
+                    conn.from.x, conn.from.y,
+                    conn.to.x, conn.to.y
+                );
+                gradient.addColorStop(0, conn.from.color + '30');
+                gradient.addColorStop(1, conn.to.color + '30');
+                
+                ctx.beginPath();
+                ctx.moveTo(conn.from.x, conn.from.y);
+                ctx.lineTo(conn.to.x, conn.to.y);
+                ctx.strokeStyle = gradient;
+                ctx.lineWidth = 1;
+                ctx.stroke();
+            });
+            
+            // Update and draw nodes
+            nodes.forEach(node => {
+                node.update();
+                node.draw();
+            });
+            
+            // Spawn new packets
+            if (timestamp - lastPacketTime > 100) {
+                spawnPacket();
+                lastPacketTime = timestamp;
+                packetCounter++;
+            }
+            
+            // Update and draw packets
+            for (let i = packets.length - 1; i >= 0; i--) {
+                if (!packets[i].update()) {
+                    packets[i].to.activity = 1;
+                    packets.splice(i, 1);
+                } else {
+                    packets[i].draw();
+                }
+            }
+            
+            // Update stats periodically
+            if (Math.floor(timestamp / 1000) !== Math.floor((timestamp - 16) / 1000)) {
+                document.getElementById('packetCount').textContent = Math.floor(packetCounter / (timestamp / 1000) * 10) / 10;
+                document.getElementById('latency').textContent = Math.floor(Math.random() * 20 + 10);
+            }
+            
+            requestAnimationFrame(animate);
+        }
+
+        // Packet info tooltip
+        const packetInfo = document.getElementById('packetInfo');
+        
+        canvas.addEventListener('mousemove', (e) => {
+            let hoveredPacket = null;
+            
+            packets.forEach(packet => {
+                const pos = packet.getCurrentPosition();
+                const dist = Math.hypot(e.clientX - pos.x, e.clientY - pos.y);
+                if (dist < 20) {
+                    hoveredPacket = packet;
+                }
+            });
+            
+            if (hoveredPacket) {
+                packetInfo.classList.add('visible');
+                packetInfo.style.left = e.clientX + 15 + 'px';
+                packetInfo.style.top = e.clientY + 15 + 'px';
+                document.getElementById('srcAddr').textContent = hoveredPacket.from.ip;
+                document.getElementById('dstAddr').textContent = hoveredPacket.to.ip;
+                document.getElementById('ttl').textContent = hoveredPacket.ttl;
+            } else {
+                packetInfo.classList.remove('visible');
+            }
+        });
+
+        window.addEventListener('resize', () => {
+            resize();
+            // Reposition nodes
+            nodes.forEach(node => {
+                node.targetX = Math.max(50, Math.min(width - 50, node.x));
+                node.targetY = Math.max(50, Math.min(height - 50, node.y));
+            });
+        });
+
+        init();
+        requestAnimationFrame(animate);
+    </script>
+</body>
+</html>

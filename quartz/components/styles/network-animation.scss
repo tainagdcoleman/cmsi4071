@@ -1,0 +1,379 @@
+@use "../../styles/variables.scss" as *;
+
+:root {
+  --net-bg-dark: #0a0a0f;
+  --net-cyan: #00f5ff;
+  --net-magenta: #ff00aa;
+  --net-yellow: #f0ff00;
+  --net-link: rgba(0, 245, 255, 0.3);
+  --net-text: #ffffff;
+  --net-text-secondary: rgba(255, 255, 255, 0.6);
+  --net-glow-cyan: 0 0 30px rgba(0, 245, 255, 0.5);
+  --net-glow-magenta: 0 0 30px rgba(255, 0, 170, 0.5);
+}
+
+// Banner mode - horizontal top banner (full width above columns)
+.network-animation-banner {
+  position: relative;
+  // Break out of page container to span full viewport width
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  height: 280px;
+  background: var(--net-bg-dark);
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 6rem;
+  padding: 1.5rem 2rem;
+
+  .grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0, 245, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 245, 255, 0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: gridPulse 4s ease-in-out infinite;
+  }
+
+  .network-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+
+  .scanline {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, transparent, var(--net-cyan), transparent);
+    opacity: 0.3;
+    animation: scan 4s linear infinite;
+    z-index: 5;
+  }
+
+  .banner-content {
+    position: relative;
+    z-index: 10;
+    text-align: left;
+    padding: 1rem 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 2rem;
+    margin-left: -14rem;
+    margin-top: -13rem;
+  }
+
+  .glitch-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+
+  .banner-title {
+    font-family: 'Syne', 'Inter', sans-serif;
+    font-size: clamp(2rem, 5vw, 4rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, var(--net-cyan) 0%, var(--net-magenta) 50%, var(--net-yellow) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: titleGlow 3s ease-in-out infinite;
+    position: relative;
+    margin: 0;
+    white-space: nowrap;
+
+    &::before,
+    &::after {
+      content: 'NETS';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, var(--net-cyan) 0%, var(--net-magenta) 50%, var(--net-yellow) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    &::before {
+      animation: glitch1 2.5s infinite;
+      clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+    }
+
+    &::after {
+      animation: glitch2 2.5s infinite;
+      clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
+    }
+  }
+
+  .banner-subtitle {
+    font-family: 'Space Mono', 'IBM Plex Mono', monospace;
+    font-size: clamp(0.55rem, 0.9vw, 0.8rem);
+    color: var(--net-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    margin: 0;
+    white-space: nowrap;
+  }
+
+  .typing-text {
+    display: inline-block;
+    overflow: hidden;
+    border-right: 2px solid var(--net-cyan);
+    white-space: nowrap;
+    animation:
+      typing 3s steps(30) 1s both,
+      blink 0.7s step-end infinite;
+  }
+
+  // Stats - on the right side
+  .stats {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    gap: 3rem;
+    justify-content: flex-end;
+    align-items: center;
+    margin-right: -23rem;
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat-value {
+    font-family: 'Syne', 'Inter', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--net-cyan);
+    display: block;
+  }
+
+  .stat-label {
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--net-text-secondary);
+    font-family: 'Space Mono', 'IBM Plex Mono', monospace;
+  }
+
+  // Protocols - at the bottom
+  .protocols {
+    position: absolute;
+    bottom: 1.25rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .protocol-badge {
+    padding: 0.3rem 0.7rem;
+    border: 1px solid var(--net-cyan);
+    background: rgba(0, 245, 255, 0.05);
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: var(--net-text);
+    font-family: 'Space Mono', 'IBM Plex Mono', monospace;
+    position: relative;
+    overflow: hidden;
+    cursor: default;
+    transition: all 0.3s ease;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0, 245, 255, 0.2), transparent);
+      transition: left 0.5s ease;
+    }
+
+    &:hover::before {
+      left: 100%;
+    }
+
+    &:hover {
+      background: rgba(0, 245, 255, 0.1);
+      box-shadow: var(--net-glow-cyan);
+      transform: translateY(-2px);
+    }
+
+    &.magenta {
+      border-color: var(--net-magenta);
+      background: rgba(255, 0, 170, 0.05);
+
+      &:hover {
+        background: rgba(255, 0, 170, 0.1);
+        box-shadow: var(--net-glow-magenta);
+      }
+
+      &::before {
+        background: linear-gradient(90deg, transparent, rgba(255, 0, 170, 0.2), transparent);
+      }
+    }
+  }
+}
+
+// Corner mode - small floating animation
+.network-animation-corner {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 150px;
+  height: 150px;
+  z-index: 50;
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--net-bg-dark);
+  border: 1px solid rgba(0, 245, 255, 0.2);
+  opacity: 0.8;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+
+  &:hover {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+
+  .network-canvas {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+// Animations
+@keyframes gridPulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+@keyframes scan {
+  0% { top: 0; }
+  100% { top: 100%; }
+}
+
+@keyframes glitch1 {
+  0%, 90%, 100% { transform: translate(0); }
+  92% { transform: translate(-5px, 2px); }
+  94% { transform: translate(5px, -2px); }
+  96% { transform: translate(-3px, 1px); }
+}
+
+@keyframes glitch2 {
+  0%, 90%, 100% { transform: translate(0); }
+  91% { transform: translate(5px, -2px); }
+  93% { transform: translate(-5px, 2px); }
+  95% { transform: translate(3px, -1px); }
+}
+
+@keyframes titleGlow {
+  0%, 100% { filter: drop-shadow(0 0 20px rgba(0, 245, 255, 0.3)); }
+  50% { filter: drop-shadow(0 0 40px rgba(255, 0, 170, 0.4)); }
+}
+
+@keyframes typing {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+@keyframes blink {
+  50% { border-color: transparent; }
+}
+
+// Responsive adjustments
+@media (max-width: 900px) {
+  .network-animation-banner {
+    height: 250px;
+    padding: 1.5rem 2rem;
+    flex-direction: column;
+    justify-content: center;
+
+    .banner-content {
+      flex-direction: column;
+      gap: 0.5rem;
+      text-align: center;
+      justify-content: center;
+    }
+
+    .stats {
+      gap: 2rem;
+      margin-top: 1rem;
+      justify-content: center;
+    }
+
+    .stat-value {
+      font-size: 1rem;
+    }
+
+    .protocols {
+      gap: 0.5rem;
+    }
+
+    .protocol-badge {
+      padding: 0.3rem 0.6rem;
+      font-size: 0.6rem;
+    }
+
+    .banner-subtitle {
+      font-size: 0.55rem;
+      letter-spacing: 0.2em;
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .network-animation-banner {
+    height: 220px;
+    padding: 1rem 1.5rem;
+
+    .banner-title {
+      font-size: 2rem;
+    }
+
+    .stats {
+      gap: 1.5rem;
+      margin-top: 0.75rem;
+    }
+
+    .stat-value {
+      font-size: 0.9rem;
+    }
+
+    .stat-label {
+      font-size: 0.45rem;
+    }
+
+    .protocols {
+      gap: 0.4rem;
+      bottom: 1rem;
+    }
+
+    .protocol-badge {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.55rem;
+    }
+  }
+
+  .network-animation-corner {
+    width: 80px;
+    height: 80px;
+    bottom: 10px;
+    right: 10px;
+  }
+}
