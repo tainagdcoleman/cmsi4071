@@ -1,5 +1,5 @@
 ---
-title: CMSI 3550 - Networks and Internets Syllabus
+title: CMSI 4071 - Senior Project I
 ---
 
 **Loyola Marymount University**

@@ -19,38 +19,7 @@ export default ((userOpts?: Partial<NetworkAnimationOptions>) => {
     if (opts.mode === "banner") {
       return (
         <div class={classNames(displayClass, "network-animation-banner")}>
-          <div class="grid-bg"></div>
           <canvas class="network-canvas" data-mode="banner"></canvas>
-          <div class="scanline"></div>
-          <div class="banner-content">
-            <div class="glitch-wrapper">
-              <h1 class="banner-title">NETS</h1>
-            </div>
-            <p class="banner-subtitle">
-              <span class="typing-text">Network Fundamentals</span>
-            </p>
-          </div>
-          <div class="stats">
-            <div class="stat">
-              <span class="stat-value" data-stat="nodeCount">0</span>
-              <span class="stat-label">Active Nodes</span>
-            </div>
-            <div class="stat">
-              <span class="stat-value" data-stat="packetCount">0</span>
-              <span class="stat-label">Packets/sec</span>
-            </div>
-            <div class="stat">
-              <span class="stat-value" data-stat="latency">0</span>
-              <span class="stat-label">Avg Latency (ms)</span>
-            </div>
-          </div>
-          <div class="protocols">
-            <span class="protocol-badge">RIP</span>
-            <span class="protocol-badge magenta">OSPF</span>
-            <span class="protocol-badge">BGP</span>
-            <span class="protocol-badge magenta">TCP/IP</span>
-            <span class="protocol-badge">UDP</span>
-          </div>
         </div>
       )
     }

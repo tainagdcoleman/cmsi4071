@@ -8,7 +8,7 @@ import * as Plugin from "./quartz/plugins"
  */
 const config: QuartzConfig = {
   configuration: {
-    pageTitle: "CMSI 3550",
+    pageTitle: "CMSI 4071",
     pageTitleSuffix: "",
     enableSPA: false,
     enablePopovers: true,
