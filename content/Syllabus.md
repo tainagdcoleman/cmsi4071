@@ -1,5 +1,5 @@
 ---
-title: CMSI 4071 - Senior Project I
+title: CMSI 4071 - Senior Project I Syllabus
 ---
 
 **Loyola Marymount University**
@@ -24,25 +24,62 @@ title: CMSI 4071 - Senior Project I
 
 ## Course Description
 
+**As a group**, you will pick your own software application to implement, propose, specify, document, develop, present, and manage a software project. You will also capture and manage the project configuration in a **team** github repository describing all the many different tools you are using. Next, you will write up and present a project proposal, where the **group** will present in front of the class.
+In addition, what is **NOT EXPLICITLY** stated in the bulletin paragraph is that there is **A GREAT DEAL MORE** to software engineering/development than just writing code and making it work:
 
-## Learning Objectives
+What this course is *REALLY* about is the discipline of producing software applications as a mindful, creative, deliberate, thoughtful act of creating a software application from scratch. Therefore, you will write up several deliverable documents that will be submitted and evaluated as part of your project (all the details about the documents are further down this page in [[#Assignments and Grading]]). 
 
-- Enter objective
+**As a group**, you will give informal oral bi-weekly status reports [bi-weekly stand-up] and you will give several presentations during the semester. The last activity of the semester is a **group** presentation of your project to an invited group of alumni, family members, and **[most importantly]** industry professionals
 
+## Learning Outcomes
 
-<!-- By the end of this course, students will be able to **describe** the network layers and explain why abstraction is important; **Write** programs that communicate with programs on another computer at the socket and application levels; **Examine** network traffic using packet analysis; **Compare** protocols and other network design considerations for a variety of contexts and applications; **Perform** assorted monitoring, administration, security, and communication tasks using various network utilities; **Apply** probability and statistical analysis to problems related to network traffic, routing, error correction -->
+- **Software Engineering Principles & Process:** Understand the principles that guide the design, development, implementation, and management of modern software projects, and why disciplined process is what separates projects that succeed from those that fail.
+- **Requirements & Customer Engagement:** Develop the ability to elicit, negotiate, and document the real needs of an outside customer, delivering regular progress updates and a verified product while reflecting on your responsibility to the people who depend on the software.
+- **Design & Architecture:** Reason about design and architectural trade-offs, and cultivate an awareness of how those choices affect maintainability, accessibility, and the common good.
+- **Documentation & Technical Communication:** Explain a system's operation, its errors, and its design to both technical and non-technical audiences through clear writing and presentations, a skill the software industry expects and rewards.
+- **Teamwork & Project Management:** Collaborate effectively on a semester-long team project, coordinating work, managing scope, and sharing accountability the way professional software teams do.
+- **Ethical & Civic Reasoning:** Examine the ethical and civic dimensions of the software you build, weighing the societal implications of technical decisions rather than treating them as purely technical.
+- **Interdisciplinary & Applied Practice:** Integrate knowledge across disciplines by collaborating with partners from engineering, psychology, the sciences, animation, and entrepreneurship, seeing how core software engineering concepts apply in varied real-world contexts.
+
+This course carries the Engaged Learning flag, one of the requirements you must meet to graduate from the University, so it addresses specific learning outcomes that go beyond writing code. It devotes significant time to connecting course content with engaged learning activities, pairing the development of a substantial software application with the documentation, writing, and presentation work expected in the software industry. Together these activities provide well over the required 15 hours of engaged learning experience, and the assignments that develop these outcomes account for at least 20% of the total course grade. Through out-of-class reading and writing, along with opportunities for interdepartmental collaboration, you will strengthen your ability to integrate knowledge across contexts, disciplines, and sub-disciplines while reasoning about the civic and ethical implications of your work.
+
+By the end of this course, students will be able to **diagnose** why software projects fail and **recognize** why they succeed; **apply** core software engineering principles to the design, development, implementation, and management of a non-trivial application; **explain** a system's operation, its errors, and the reasoning behind its design; **collaborate** effectively on a year-long team project; **elicit** requirements from a real customer and **deliver**, test, and verify a working product that meets their needs; **communicate** progress through written documentation and presentations to technical and non-technical audiences; **reason** about the ethical and civic dimensions of software they build; and **integrate** knowledge across disciplines by evaluating software systems in varied contexts.
 
 ## Textbooks and Materials
 
+- **Head First Software Develoment** by Dan Pilone & Russ Miles (ISBN-13: 978-0-596-52735-8 ISBN-10: 0-596-52735-7). The Head First book provides you with an in-depth look at the Agile Software Development Process, better known as simply Agile. It is also a fun read, lots of pictures, easily understandable but well-written text, and a bit of silliness to keep you engaged. You can probably read the entire book in about 4 hours. There will be ONE written assignment from this book, and you will be expected to know and understand the material it contains, and you may want to use the Agile method during the course of the semester to develop your projects.
+
+- **UML Distilled Third Edition** by Martin Fowler (ISBN-13: 978-0-32-119368-1 ISBN-10: 0-32-119368-7).
+The UML book provides you with a very concise reference for using the Unified Modeling Language to document and communicate your project design. This is a somewhat controversial topic, both within the LMU computer science department, and in the industry at large. Many people thin, that UML is completely obsolete. Just as many people do not agree. For this reason, I will acquaint you with the basics of this language, so that you will know it when you see it in the wild, and so that if you are called upon in your job to use it for documentation pyurposes you will have an understanding of how to do it properly. I recommend this book for your desk reference set.
+
+Neither are available at the LMU library however 
 <!-- You will prepare for class discussions and activities by reading and responding to a variety of provided materials including sections from the online textbook [Introduction to the Internet: Architecture and Protocols](https://textbook.cs168.io/), which is a great reference even if not required reading for certain topics. -->
 
 ### Assignments and Projects
 
-Hands-on assignments and in-class activities that anchor key concepts in practice include 
-<!-- exploring real networks with diagnostic utilities, implementing network services that connect client and server applications, building a packet filter to analyze traffic, and examining influential research papers. These exercises lead up to an open-ended final project that allows a deeper dive into one or more areas. -->
+#### Upkeep details
+All group project information will be neatly organized in a **private** GitHub repository, so that your professor can see your groups' work and provide you with evaluations. These evaluations will consist of feedback on your various work products, and will be uploaded back to your group's project repository for your group members to see. **NO ONE ELSE SHOULD HAVE ACCESS TO YOUR REPOSITORY FOR THE DURATION OF THE COURSE** — since the evaluations are considered grades, this is a FERPA issue. In the industry, this kind of repository is known as a Software Development Library (SDL).
 
-Throughout the semester, you will share your work with peers and check-in with the instructor to align progress with individual goals and interests.
+In addition, starting with a Git repository from the beginning will help you maintain your work and will be what you must do in your jobs after school on project teams in the industry. You may as well ge used to it now, if you aren't already.
 
+> [!warning]
+> Your repository should be complete and up to date for every class, and might be spot-checked at any time. If there are corrections in process they should be so indicated. In addition, all documentation that is created must also be committed, as must your homework assignments.
+
+#### About Exams
+There is **neither a mid-term exam nor a final exam** for this course. Instead, the final project presentation and demonstration serves the purpose of the exams, and the deliverables replace tests and/or quizzes during the semester.
+
+The ==final presentation== will be done in front of as many faculty, alumni, and selected invitees from industry as can attend, as well as family and friends of the students.
+
+Grades for the course are assigned according to the weighting factors shown in the tables below (see [[#Assignments and Grading]]). Finally, other professors may be invited to all of the presentations, not just the final one, and will be asked to provide the students with questions about their project designs, and to make suggestions.
+
+There will be two written assignments during the course of the semester. One is an essay, and the other is a set of questions from the Peloni textbook [see next section]. 
+
+>[!warning]
+> All written assignments are expected to be submitted by the start of class on the date the assignment is due. Deviation from this process requires prior consent of the instructor.
+
+The final words on assignments: treat assignments seriously, just like they would be treated in any real-world job in the industry. Spelling and grammar, proper punctuation, and so forth all count ==for every assignment==. 
+
+There will also be some fun in-class quizzes during the semester, usually at the end of class on the Monday session, or sometimes on Wednesdays. These quizzes will be done using Kahoot. They are primarily to give you a chance to check your knowledge of the material for the week, and to reiterate some of the important points of the class.
 
 
 ## Lecture Attendance
@@ -80,40 +117,38 @@ I recommend going to the Keck Lab to work on assignments during TA office hours.
 The following is a tentative schedule for topics to be covered in the course and is subject to change. For each topic, the relevant notes are also given. I also recommend that you check Brightspace regularly for information on the course.
 
 
-| Date       | Lecture Topic                                                           | Optional Reading                                                                                                                                                                                                                                                                           |Homework|
-| -----      | ------------------------------------------------------------------------| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------|
-| Tue  |     |  |   | 
-| Thu  |     |  |   |
-| Tue  |     |  |   |
-| Thu  |     |  |   |
-| Tue  |     |  |   |
-| Thu  |     |  |   |
-| Tue  |     |  |   |
-| Thu  |     |  |   |
-| Tue  |     |  |   |
-| Thu  |     |  |   |
-| Tue  |     |  |   |
-| Thu  |     |  |   | 
-| Thu  |     |  |   | 
-| Tue  |     |  |   |
-| Mar  |     |  |   | 
-| Tue  |     |  |   | 
-| Thu  |     |  |   | 
-| Tue  |     |  |   |
-| Thu  |     |  |   |
-| Tue  |     |  |   | 
-| Thu  |     |  |   | 
-| Tue  |     |  |   | 
-| Thu  |     |  |   | 
-| Tue  |     |  |   |
-| Thu  |     |  |   |
-| Tue  |     |  |   |
-| Thu  |     |  |   |
-| Tue  |     |  |   |
-| Thu  |     |  |   |
-| Tue  |     |  |   |
-| Thu  |     |  |   |
-| Thu  |     |  |   |
+| Date | Lecture Topic | Optional Reading | Homework |
+| ---- | ------------- | ---------------- | -------- |
+| Tue Sep 1 |  |  |  |
+| Thu Sep 3 |  |  |  |
+| Tue Sep 8 |  |  |  |
+| Thu Sep 10 |  |  |  |
+| Tue Sep 15 |  |  |  |
+| Thu Sep 17 |  |  |  |
+| Tue Sep 22 |  |  |  |
+| Thu Sep 24 |  |  |  |
+| Tue Sep 29 |  |  |  |
+| Thu Oct 1 |  |  |  |
+| Tue Oct 6 |  |  |  |
+| Thu Oct 8 |  |  |  |
+| Tue Oct 13 |  |  |  |
+| Thu Oct 15 |  |  |  |
+| Tue Oct 20 |  |  |  |
+| Thu Oct 22 |  |  |  |
+| Tue Oct 27 |  |  |  |
+| Thu Oct 29 |  |  |  |
+| Tue Nov 3 |  |  |  |
+| Thu Nov 5 |  |  |  |
+| Tue Nov 10 |  |  |  |
+| Thu Nov 12 |  |  |  |
+| Tue Nov 17 |  |  |  |
+| Thu Nov 19 |  |  |  |
+| Tue Nov 24 |  |  |  |
+| ~~Thu Nov 26~~ | **No class — Thanksgiving Holiday** | — | — |
+| Tue Dec 1 |  |  |  |
+| Thu Dec 3 |  |  |  |
+| Tue Dec 8 |  |  |  |
+| Thu Dec 10 |  |  |  |
 
 [finals]: https://registrar.lmu.edu/finalexamschedule/
 
@@ -143,13 +178,13 @@ The following is a tentative schedule for topics to be covered in the course and
 - **Excredit paper assignment [10%]**: A paper/article synopsis with some open questions.
 
 >[!note]
->**NOTE: All work is evaluated for both technical merit and quality of written and/or oral presentation.** Find yourself a good spelling and grammar checker, or a trusted human editor, if you are having any difficulty with the rules of standard English language usage. Another excellent resource is the Academic Resource Center [ARC](https://academics.lmu.edu/arc/), located on the south side of Daum Hall. The center takes appointments, and also allows drop-in consultation sessions, and they have a number of good benefits. Call (310) 338-2847 to schedule an appointment.
+>**All work is evaluated for both technical merit and quality of written and/or oral presentation.** Find yourself a good spelling and grammar checker, or a trusted human editor, if you are having any difficulty with the rules of standard English language usage. Another excellent resource is the Academic Resource Center [ARC](https://academics.lmu.edu/arc/), located on the south side of Daum Hall. The center takes appointments, and also allows drop-in consultation sessions, and they have a number of good benefits. Call (310) 338-2847 to schedule an appointment.
 
 **Another thing to remember** is, your coding style is just as important a part of your assignment evaluations as correctly running code. I WILL NOT HESITATE to take points off for code that has hard-coded numbers, lack of proper comments, poorly aligned indenting, etc. EVEN IF THE CODE RUNS CORRECTLY!
 
 Further, let me re-state that if you are using compiled code like C++ or C-sharp, code that does not compile will be not be evaluated and you will have to do it over to get any credit for the assignment.
 
->[!waring]
+> [!warning]
 >**Remember**: I won't have any idea how to build and run your project code unless you give me explicit instructions on how to do so somewhere on the project pages! The best place to do this is in the README.md file in your GitHub repository, which is also a great place to put a very brief general project description. At the end of the semester, when I get ready to do the final evaluation of your project, if I can't easily make it build and run, there will be points taken off. Coming to me after the fact and demonstrating on YOUR machine that your project runs will not earn back any points. Forewarned is forearmed, as the saying goes.
 
 ## Grading Scale
@@ -207,7 +242,8 @@ Generating short documentation strings and type hints. Finding examples and expl
 >**Remember your four As**: you MAY use technologies such as GenAI to Augment ✅, Amplify ✅ and Accelerate ✅ your learning; NEVER use technology to Avoid ❌ learning.
 
 >[!danger]
->If you DO use GenAI for any of your work, that must be indicated somewhere in your documentation with an AI use disclosure: "This portion of the work was developed with assistance from [tool and version, e.g., Claude Opus 4.5]. I used it to [briefly describe the task: e.g., generate an initial implementation of the sorting module, draft this section of the design document, debug the authentication flow]. I have reviewed, tested, and understand all AI-generated content included here, and I take full responsibility for its correctness and its fit with the rest of the project."
+>If you DO use GenAI for any of your work, that must be indicated somewhere in your documentation with an AI use disclosure:
+>*"This portion of the work was developed with assistance from [tool and version, e.g., Claude Opus 4.5]. I used it to [briefly describe the task: e.g., generate an initial implementation of the sorting module, draft this section of the design document, debug the authentication flow]. I have reviewed, tested, and understand all AI-generated content included here, and I take full responsibility for its correctness and its fit with the rest of the project."*
 
 
 

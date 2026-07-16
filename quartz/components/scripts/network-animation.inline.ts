@@ -309,8 +309,10 @@ function drawDoodle(ctx: CanvasRenderingContext2D, geo: Doodle, ox: number, oy: 
 }
 
 function initNetworkAnimation(canvas: HTMLCanvasElement, isBanner: boolean) {
-  const ctx = canvas.getContext('2d')
-  if (!ctx) return
+  const maybeCtx = canvas.getContext('2d')
+  if (!maybeCtx) return
+  // bind after the null check so the nested draw functions see a non-nullable type
+  const ctx: CanvasRenderingContext2D = maybeCtx
 
   let width: number
   let height: number
@@ -380,7 +382,7 @@ function initNetworkAnimation(canvas: HTMLCanvasElement, isBanner: boolean) {
     ctx.lineCap = 'round'
 
     if (!isBanner) {
-      // Corner: just a small cloud with "SE"
+      // Corner: just a small cloud with "SP"
       const cx = width / 2
       const cy = height / 2
       const cloud = cloudPath(cx, cy, width * 0.32, height * 0.24)
@@ -396,7 +398,7 @@ function initNetworkAnimation(canvas: HTMLCanvasElement, isBanner: boolean) {
       ctx.font = `800 ${width * 0.22}px "Schibsted Grotesk", sans-serif`
       ctx.textAlign = 'center'
       ctx.textBaseline = 'middle'
-      ctx.fillText('SE', cx, cy)
+      ctx.fillText('SP', cx, cy)
       return
     }
 

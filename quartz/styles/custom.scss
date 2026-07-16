@@ -1,3 +1,15 @@
 @use "./base.scss";
 
 // put your custom CSS here!
+
+// SDL outline: ".lit" marks the sections students are responsible for.
+// (Same class name Dr. Johnson's original page used for its green highlight.)
+pre .lit {
+  background-color: rgba(122, 201, 67, 0.35);
+  border-radius: 3px;
+  padding: 0 3px;
+}
+
+:root[saved-theme="dark"] pre .lit {
+  background-color: rgba(122, 201, 67, 0.25);
+}

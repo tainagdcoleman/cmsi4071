@@ -30,9 +30,20 @@ Instructor: Dr. Tainã Coleman, taina.coleman@lmu.edu
 
 This course introduces the essential software engineering principles that guide the design, development, implementation, and management of modern software projects. Students explore software life cycle models and learn to move from problem description through specification and analysis using object-oriented and use-case methods. The course covers requirements specification, development planning, and the fundamentals of project management, alongside testing philosophies and the ethical concerns, conflicts, and resolution strategies that arise in real projects.
 
+
+## What is expected from you:
+
+**As a group**, you will pick your own software application to implement, propose, specify, document, develop, present, and manage a software project. You will also capture and manage the project configuration in a **team** github repository describing all the many different tools you are using. Next, you will write up and present a project proposal, where the **group** will present in front of the class.
+In addition, what is **NOT EXPLICITLY** stated in the bulletin paragraph is that there is **A GREAT DEAL MORE** to software engineering/development than just writing code and making it work:
+
+What this course is *REALLY* about is the discipline of producing software applications as a mindful, creative, deliberate, thoughtful act of creating a software application from scratch. Therefore, you will write up several deliverable documents that will be submitted and evaluated as part of your project (all the details about the socument are in the [Syllabus](Syllabus.md)). 
+
+**As a group**, you will give informal oral bi-weekly status reports [bi-weekly stand-up] and you will give several presentations during the semester. The last activity of the semester is a **group** presentation of your project to an invited group of alumni, family members, and **[most importantly]** industry professionals
+
+
 I am excited to have you in the course and look forward to a great semester!
 
 >[!NOTE]
->Much of the content from the materials in this course is directely or adapted from Dr. Johnson's class notes [CMSI 4071](https://bjohnson.lmu.build/cmsi4071web/). 
+>Much of the content in the materials in this course is directely taken or adapted from Dr. Johnson's class notes [CMSI 4071](https://bjohnson.lmu.build/cmsi4071web/). 
 
 <!-- There also adaptations from Slide credits are given in the slide decks. (ADD THIS WHEN I DECIDE WHAT TO DO) -->
